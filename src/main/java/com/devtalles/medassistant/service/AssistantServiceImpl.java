@@ -27,14 +27,20 @@ public class AssistantServiceImpl implements AssistantService{
     @Value("classpath:prompts/diagnosis-cot.st")
     private Resource diagnosisCotResource;
 
+    @Value("classpath:prompts/consultation.st")
+    private Resource consultationResource;
+
     private PromptTemplate explainConditionTemplate;
 
     private PromptTemplate symptomAnalysisTemplate;
 
     private PromptTemplate diagnosisCotTemplate;
 
+    private PromptTemplate consultationTemplate;
+
     @PostConstruct
     void init(){
+        consultationTemplate = new PromptTemplate(consultationResource);
         diagnosisCotTemplate = new PromptTemplate(diagnosisCotResource);
         symptomAnalysisTemplate = new PromptTemplate(symptomAnalysisPrompt);
         explainConditionTemplate = new PromptTemplate(explainConditionPrompt);
@@ -95,6 +101,16 @@ public class AssistantServiceImpl implements AssistantService{
 
         String message = diagnosisCotTemplate.render(Map.of("sintomas", symptoms));
 
+        return resolveClient(model)
+                .prompt(message)
+                .call()
+                .content();
+    }
+
+    @Override
+    public String consult(String query, String model) {
+        log.info("Consulta médica — modelo: {}", model);
+        String message = consultationTemplate.render(Map.of("consulta", query));
         return resolveClient(model)
                 .prompt(message)
                 .call()
