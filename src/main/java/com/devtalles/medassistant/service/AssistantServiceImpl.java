@@ -21,7 +21,6 @@ import java.util.Map;
 public class AssistantServiceImpl implements AssistantService{
 
     private final ClientResolver clientResolver;
-    private final AppointmentSearchTool appointmentSearchTool;
 
     @Value("classpath:prompts/explain-condition.st")
     private Resource explainConditionPrompt;
@@ -57,7 +56,6 @@ public class AssistantServiceImpl implements AssistantService{
 
         return clientResolver.resolve(model)
                 .prompt(prompt)
-                .tools(appointmentSearchTool)
                 .call()
                 .content();
     }
