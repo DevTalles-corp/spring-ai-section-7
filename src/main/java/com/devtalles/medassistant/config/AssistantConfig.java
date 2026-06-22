@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 @Configuration
 public class AssistantConfig {
@@ -19,15 +20,21 @@ public class AssistantConfig {
 
     @Bean("geminiClient")
     ChatClient geminiClient(GoogleGenAiChatModel chatModel) throws IOException {
+
+        String systemPrompt = systemPromptResource.getContentAsString(StandardCharsets.UTF_8)
+                .replace("{currentDate}", LocalDate.now().toString());
+
         return ChatClient.builder(chatModel)
-                .defaultSystem(systemPromptResource.getContentAsString(StandardCharsets.UTF_8))
+                .defaultSystem(systemPrompt)
                 .build();
     }
 
     @Bean("ollamaClient")
     ChatClient ollamaClient(OllamaChatModel chatModel) throws IOException {
+        String systemPrompt = systemPromptResource.getContentAsString(StandardCharsets.UTF_8)
+                .replace("{currentDate}", LocalDate.now().toString());
         return ChatClient.builder(chatModel)
-                .defaultSystem(systemPromptResource.getContentAsString(StandardCharsets.UTF_8))
+                .defaultSystem(systemPrompt)
                 .build();
     }
 }
