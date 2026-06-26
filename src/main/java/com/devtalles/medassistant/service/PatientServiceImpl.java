@@ -6,6 +6,7 @@ import com.devtalles.medassistant.repository.PatientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,6 +15,7 @@ public class PatientServiceImpl implements PatientService{
 
     private final PatientRepository patientRepository;
 
+    @Transactional(readOnly = true)
     @Override
     public PatientInfo getPatientInfo(Long patientId) {
 

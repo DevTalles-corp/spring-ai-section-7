@@ -25,7 +25,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/**").hasRole("PATIENT")
+                        .requestMatchers("/api/v1/**").hasAnyRole("PATIENT", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer( auth2 ->
